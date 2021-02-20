@@ -1,5 +1,5 @@
 
-###简介
+### 简介
 1、sort函数可以三个参数也可以两个参数，必须的头文件#include < algorithm>和using namespace std;
 2、它使用的排序方法是类似于快排的方法，时间复杂度为n*log2(n)
 3、Sort函数有三个参数：（第三个参数可不写）
