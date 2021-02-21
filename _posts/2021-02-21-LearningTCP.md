@@ -1,10 +1,10 @@
 ### 基于TCP网络编程
 
 ![IMAGE](../images/tcp.png)
-###1、socket的基本操作
+### 1、socket的基本操作
 既然socket是“open—write/read—close”模式的一种实现，那么socket就提供了这些操作对应的函数接口。下面以TCP为例，介绍几个基本的socket接口函数。
  生成套接字，主要有3个参数：通信的目的IP地址、使用的传输 层协议(TCP或UDP)和使用的端口号。Socket原意是“插座”。通过将这3个参数结合起来，与一个“插座”Socket绑定，应用层就可以和传输 层通过套接字接口，区分来自不同应用程序进程或网络连接的通信，实现数据传输的并发服务。
-####（1）socket()函数
+#### （1）socket()函数
 int socket(int domain, int type, int protocol);
 socket函数对应于普通文件的打开操作。普通文件的打开操作返回一个文件描述字，而socket()用于创建一个socket描述符（socket descriptor），它唯一标识一个socket。这个socket描述字跟文件描述字一样，后续的操作都有用到它，把它作为参数，通过它来进行一些读写操作。
 
@@ -17,7 +17,7 @@ protocol：故名思意，就是指定协议。常用的协议有，IPPROTO_TCP�
 
 当我们调用socket创建一个socket时，返回的socket描述字它存在于协议族（address family，AF_XXX）空间中，但没有一个具体的地址。如果想要给它赋值一个地址，就必须调用bind()函数，否则就当调用connect()、listen()时系统会自动随机分配一个端口。
 
-####2、bind()函数
+#### 2、bind()函数
 正如上面所说bind()函数把一个地址族中的特定地址赋给socket。例如对应AF_INET、AF_INET6就是把一个ipv4或ipv6地址和端口号组合赋给socket。
 
 int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
@@ -41,7 +41,7 @@ int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
 accept函数的第一个参数为服务器的socket描述字，第二个参数为指向struct sockaddr *的指针，用于返回客户端的协议地址，第三个参数为协议地址的长度。如果accpet成功，那么其返回值是由内核自动生成的一个全新的描述字，代表与返回客户的TCP连接。
 
 注意：accept的第一个参数为服务器的socket描述字，是服务器开始调用socket()函数生成的，称为监听socket描述字；而accept函数返回的是已连接的socket描述字。一个服务器通常通常仅仅只创建一个监听socket描述字，它在该服务器的生命周期内一直存在。内核为每个由服务器进程接受的客户连接创建了一个已连接socket描述字，当服务器完成了对某个客户的服务，相应的已连接socket描述字就被关闭。
-####5、close()函数
+#### 5、close()函数
 在服务器与客户端建立连接之后，会进行一些读写操作，完成了读写操作就要关闭相应的socket描述字，好比操作完打开的文件要调用fclose关闭打开的文件。
 ```
 #include <unistd.h>
@@ -72,7 +72,7 @@ https://www.cnblogs.com/suntp/p/6434644.html
 
 **所以：在将一个地址绑定到socket的时候，请先将主机字节序转换成为网络字节序**，而不要假定主机字节序跟网络字节序一样使用的是Big-Endian。由于这个问题曾引发过血案！公司项目代码中由于存在这个问题，导致了很多莫名其妙的问题，所以请谨记对主机字节序不要做任何假定，务必将其转化为网络字节序再赋给socket。
 
-###5、tcp建立连接要进行“三次握手”
+### 5、tcp建立连接要进行“三次握手”
 ![IMAGE](../images/tcp2.png)
 下来是四次挥手过程
 
@@ -90,7 +90,7 @@ https://www.cnblogs.com/suntp/p/6434644.html
 
 从图中可以看出，当客户端调用connect时，触发了连接请求，向服务器发送了SYN J包，这时connect进入阻塞状态；服务器监听到连接请求，即收到SYN J包，调用accept函数接收请求向客户端发送SYN K ，ACK J+1，这时accept进入阻塞状态；客户端收到服务器的SYN K ，ACK J+1之后，这时connect返回，并对SYN K进行确认；服务器收到ACK K+1时，accept返回，至此三次握手完毕，连接建立。
 
-###6、socket中TCP的四次挥手释放连接详解
+### 6、socket中TCP的四次挥手释放连接详解
 ![IMAGE](../images/tcp5.png)
 图示过程如下：
 
@@ -101,7 +101,7 @@ https://www.cnblogs.com/suntp/p/6434644.html
 这样每个方向上都有一个FIN和ACK。
 
 
-###ACK机制是怎么工作的：
+### ACK机制是怎么工作的：
 
 
 数据丢失或延迟。发送方发送数据seq时会起一个定时器，如果在指定时间内没有接收到ACK seq + 1，就把数据seq再发一次。
