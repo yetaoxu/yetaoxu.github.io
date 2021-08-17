@@ -26,7 +26,7 @@ int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 sockfd：即socket描述字，它是通过socket()函数创建了，唯一标识一个socket。bind()函数就是将给这个描述字绑定一个名字。
 addr：一个const struct sockaddr*指针，指向要绑定给sockfd的协议地址。这个地址结构根据地址创建socket时的地址协议族的不同而不同。
 addrlen：对应的是地址的长度
-####3、listen()、connect()函数
+#### 3、listen()、connect()函数
 如果作为一个服务器，在调用socket()、bind()之后就会调用listen()来监听这个socket，如果客户端这时调用connect()发出连接请求，服务器端就会接收到这个请求。
 
 int listen(int sockfd, int backlog);
@@ -34,7 +34,7 @@ int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
 listen函数的第一个参数即为要监听的socket描述字，第二个参数为相应socket可以排队的最大连接个数。socket()函数创建的socket默认是一个主动类型的，listen函数将socket变为被动类型的，等待客户的连接请求。
 
 connect函数的第一个参数即为客户端的socket描述字，第二参数为服务器的socket地址，第三个参数为socket地址的长度。客户端通过调用connect函数来建立与TCP服务器的连接。
-####4、accept()函数
+#### 4、accept()函数
 TCP服务器端依次调用socket()、bind()、listen()之后，就会监听指定的socket地址了。TCP客户端依次调用socket()、connect()之后就想TCP服务器发送了一个连接请求。TCP服务器监听到这个请求之后，就会调用accept()函数取接收请求，这样连接就建立好了。之后就可以开始网络I/O操作了，即类同于普通文件的读写I/O操作。
 
 int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
@@ -52,15 +52,15 @@ close一个TCP socket的缺省行为时把该socket标记为以关闭，然后�
 注意：close操作只是使相应socket描述字的引用计数-1，只有当引用计数为0的时候，才会触发TCP客户端向服务器发送终止连接请求。
 
 
-2、TCP 三次握手和四次挥手
+### 2、TCP 三次握手和四次挥手
 https://blog.csdn.net/tennysonsky/article/details/45622395
 为什么建立连接协议是三次握手，而关闭连接却是四次握手呢？
 
 这是因为服务端的 LISTEN 状态下的 SOCKET 当收到 SYN 报文的建连请求后，它可以把 ACK 和 SYN（ACK 起应答作用，而 SYN 起同步作用）放在一个报文里来发送。但关闭连接时，当收到对方的 FIN 报文通知时，它仅仅表示对方没有数据发送给你了，但是你还可以给对方发送数据，也有这么种可能，你还有一些数据在传给对方的途中，所以你不能立马关闭连接,也即你可能还需要把在传输途中的数据给对方之后，又或者，你还有一些数据需要传输给对方后，（再关闭连接）再发送FIN 报文给对方来表示你同意现在可以关闭连接了，所以它这里的 ACK 报文和 FIN 报文多数情况下都是分开发送的。
 
-3、https://blog.csdn.net/lvyuan30276/article/details/50458572
+### 3、https://blog.csdn.net/lvyuan30276/article/details/50458572
 
-###4、网络字节序与主机字节序
+### 4、网络字节序与主机字节序
 https://www.cnblogs.com/suntp/p/6434644.html
 主机字节序就是我们平常说的大端和小端模式：不同的CPU有不同的字节序类型，这些字节序是指整数在内存中保存的顺序，这个叫做主机序。引用标准的Big-Endian和Little-Endian的定义如下：
 
